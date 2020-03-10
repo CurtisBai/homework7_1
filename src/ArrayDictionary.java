@@ -1,4 +1,6 @@
+
 public class ArrayDictionary implements Dictionary {
+
     private int capacity;
     private int count;
     private KVEntry[] entries;
@@ -9,12 +11,15 @@ public class ArrayDictionary implements Dictionary {
     }
 
     private int hashFunction(int key) {
+        while (key < 0) {
+            key += capacity;
+        }
         return key % capacity;
     }
 
     @Override
     public boolean isEmpty() {
-        return count==0;
+        return count == 0;
     }
 
     public int getCount() {
@@ -58,6 +63,22 @@ public class ArrayDictionary implements Dictionary {
     @Override
     public boolean remove(int key) {
         // homework
+        int hashedKey = hashFunction(key);
+        KVEntry ptr = entries[hashedKey];
+        if (ptr == null) {
+            return false;
+        }
+        if (ptr.key == key) {
+            entries[hashedKey] = entries[hashedKey].next;
+            return true;
+        }
+        while (ptr.next != null) {
+            if (ptr.next.key == key) {
+                ptr.next = ptr.next.next;
+                return true;
+            }
+            ptr = ptr.next;
+        }
         return false;
     }
 
@@ -66,6 +87,14 @@ public class ArrayDictionary implements Dictionary {
     @Override
     public boolean contains(int key) {
         // homework
+        int hashedKey = hashFunction(key);
+        KVEntry ptr = entries[hashedKey];
+        while (ptr != null) {
+            if (ptr.key == key) {
+                return true;
+            }
+            ptr = ptr.next;
+        }
         return false;
     }
 
@@ -74,6 +103,14 @@ public class ArrayDictionary implements Dictionary {
     @Override
     public Integer get(int key) {
         // NOT IMPLEMENTED
+        int hashedKey = hashFunction(key);
+        KVEntry ptr = entries[hashedKey];
+        while (ptr != null) {
+            if (ptr.key == key) {
+                return ptr.value;
+            }
+            ptr = ptr.next;
+        }
         return null;
     }
 
@@ -82,11 +119,11 @@ public class ArrayDictionary implements Dictionary {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < capacity; i++) {
             if (entries[i] == null) {
-                builder.append("dictionary["+ i + "] = null\n");
+                builder.append("dictionary[" + i + "] = null\n");
                 continue;
             }
             KVEntry ptr = entries[i];
-            builder.append("dictionary["+i+"] = {");
+            builder.append("dictionary[" + i + "] = {");
             while (ptr != null) {
                 builder.append("(" + ptr.key + ", " + ptr.value + ")");
                 ptr = ptr.next;
@@ -95,4 +132,5 @@ public class ArrayDictionary implements Dictionary {
         }
         return builder.toString();
     }
+
 }

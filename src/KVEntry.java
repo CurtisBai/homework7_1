@@ -1,4 +1,6 @@
+
 public class KVEntry {
+
     int key;
     int value;
 
@@ -8,4 +10,5 @@ public class KVEntry {
         this.key = key;
         this.value = value;
     }
+
 }
